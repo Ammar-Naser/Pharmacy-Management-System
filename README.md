@@ -25,7 +25,7 @@ A desktop-based Pharmacy Management System built using C# and Windows Forms, des
  - stock quantity
  - total price
  - customer loyalty points
-(ضيف صور الفورمز هنا بعدين من المشروع)
+
 # APP Forms:
 each implements the CRDU operations
  - Login Screen
