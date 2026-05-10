@@ -1,0 +1,125 @@
+CREATE DATABASE pharmacy_db;
+USE pharmacy_db;
+GO
+
+-- EMPLOYEES
+CREATE TABLE EMPLOYEES (
+    ssn INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    salary FLOAT NOT NULL
+);
+
+-- CUSTOMERS
+CREATE TABLE CUSTOMERS (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    loyalty_points INT DEFAULT 0
+);
+
+-- DRUG CATEGORY
+CREATE TABLE DRUG_CATEGORY (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+-- DRUGS
+CREATE TABLE DRUGS (
+    code INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price FLOAT NOT NULL,
+    expiry_date DATE,
+    category_id INT,
+    stock INT DEFAULT 0,
+
+    FOREIGN KEY (category_id) REFERENCES DRUG_CATEGORY(id)
+);
+
+-- INVOICE
+CREATE TABLE INVOICE (
+    inv_id INT IDENTITY(1,1) PRIMARY KEY,
+    customer_id INT,
+    employee_ssn INT,
+    total_amount FLOAT,
+
+    FOREIGN KEY (customer_id) REFERENCES CUSTOMERS(id),
+    FOREIGN KEY (employee_ssn) REFERENCES EMPLOYEES(ssn)
+);
+
+-- INVOICE ITEM
+CREATE TABLE INVOICE_ITEM (
+    inv_id INT,
+    item_no INT,
+    drug_code INT,
+    quantity INT,
+
+    PRIMARY KEY (inv_id, item_no),
+
+    FOREIGN KEY (inv_id) REFERENCES INVOICE(inv_id),
+    FOREIGN KEY (drug_code) REFERENCES DRUGS(code)
+);
+
+-- Categories
+INSERT INTO DRUG_CATEGORY (name) VALUES
+('Painkillers'),
+('Antibiotics'),
+('Vitamins'),
+('Cold & Flu');
+
+-- BRANCH
+CREATE TABLE BRANCH (
+    branch_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    location VARCHAR(150) NOT NULL
+);
+
+--SUPPLIER
+CREATE TABLE SUPPLIER (
+    supplier_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20)
+);
+
+--SUPPLIES
+CREATE TABLE SUPPLIES (
+    supplier_id INT,
+    drug_code INT,
+    supply_quantity INT,
+
+    PRIMARY KEY (supplier_id, drug_code),
+
+    FOREIGN KEY (supplier_id) REFERENCES SUPPLIER(supplier_id),
+    FOREIGN KEY (drug_code) REFERENCES DRUGS(code)
+);
+
+--STOCKS
+CREATE TABLE STOCKS (
+    branch_id INT,
+    drug_code INT,
+    stock_level INT DEFAULT 0,
+    is_out_of_stock BIT DEFAULT 0,
+
+    PRIMARY KEY (branch_id, drug_code),
+
+    FOREIGN KEY (branch_id) REFERENCES BRANCH(branch_id),
+    FOREIGN KEY (drug_code) REFERENCES DRUGS(code)
+);
+
+--SUPPLIER
+CREATE TABLE SUPPLIER (
+    supplier_id INT IDENTITY(1,1) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20)
+);
+
+--SUPPLIES
+CREATE TABLE SUPPLIES (
+    supplier_id INT,
+    drug_code INT,
+    supply_quantity INT,
+
+    PRIMARY KEY (supplier_id, drug_code),
+
+    FOREIGN KEY (supplier_id) REFERENCES SUPPLIER(supplier_id),
+    FOREIGN KEY (drug_code) REFERENCES DRUGS(code)
+);
